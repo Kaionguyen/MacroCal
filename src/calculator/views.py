@@ -27,8 +27,8 @@ def nutrition_data(request):
             params = {
                 'age': age,
                 'gender': gender,
-                'weight_kg': weight_kg,
-                'height_cm': height_cm,
+                'weight': weight_kg,
+                'height': height_cm,
                 'activitylevel': activity_level,
             }
 
@@ -36,7 +36,7 @@ def nutrition_data(request):
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
 
-                calories = response_data['Data']['goals']['Weight gain']['calory']
+                calories = response_data['data']['goals']['Weight gain']['calory']
 
                 return render(request, 'result.html', {'calories': calories})
 
