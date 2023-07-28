@@ -16,8 +16,9 @@ def nutrition_data(request):
             weight_kg = form.cleaned_data['weight_kg']
             height_cm = form.cleaned_data['height_cm']
             activity_level = form.cleaned_data['activity_level']
+            weight_goal = form.cleaned_data['weight_goal']
 
-            url = 'https://fitness-calculator.p.rapidapi.com/dailycalorie'
+            url = 'https://fitness-calculator.p.rapidapi.com/macrocalculator'
 
             headers = {
                 "X-RapidAPI-Key": settings.API_KEY,
@@ -30,13 +31,14 @@ def nutrition_data(request):
                 'weight': weight_kg,
                 'height': height_cm,
                 'activitylevel': activity_level,
+                'goal': weight_goal,
             }
 
             try:
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
 
-                calories = response_data['data']['goals']['Weight gain']['calory']
+                calories = round(response_data['data']['calorie'])
 
                 return render(request, 'result.html', {'calories': calories})
 
