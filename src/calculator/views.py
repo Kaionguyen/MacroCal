@@ -31,3 +31,17 @@ def nutrition_data(request):
                 'height_cm': height_cm,
                 'activitylevel': activity_level,
             }
+
+            try:
+                response = requests.get(url, headers=headers, params=params)
+                response_data = response.json()
+
+                calories = response_data['Data']['goals']['Weight gain']['calory']
+
+                return render(request, 'result.html', {'calories': calories})
+
+            except requests.exceptions.RequestException as e:
+                error_message = str(e)
+                return render(request, 'error.html', {'error_message': error_message})
+
+    return render(request, 'temp.html', {'form': form})
