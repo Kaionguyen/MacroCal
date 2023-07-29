@@ -40,10 +40,10 @@ def nutrition_data(request):
 
                 calories = round(response_data['data']['calorie'])
 
-                return render(request, 'result.html', {'calories': calories})
+                return render(request, 'calculator/result.html', {'calories': calories})
 
             except requests.exceptions.RequestException as e:
                 error_message = str(e)
-                return render(request, 'error.html', {'error_message': error_message})
+                return render(request, 'calculator/error.html', {'error_message': error_message})
 
-    return render(request, 'temp.html', {'form': form})
+    return render(request, 'calculator/index.html', {'form': form})
