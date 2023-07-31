@@ -3,7 +3,7 @@ from django import forms
 
 class UserInfo(forms.Form):
     age = forms.IntegerField(label='Age', min_value=0, max_value=80)
-    gender = forms.ChoiceField(label='Gender', choices=[('male', 'Male'), ('female', 'Female')])
+    sex = forms.ChoiceField(label='Sex', choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = forms.DecimalField(label='Weight (kg)', min_value=40, max_value=160)
     height_cm = forms.DecimalField(label='Height (cm)', min_value=130, max_value=230)
     activity_level = forms.ChoiceField(

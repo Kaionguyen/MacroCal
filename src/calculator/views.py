@@ -12,7 +12,7 @@ def nutrition_data(request):
 
         if form.is_valid():
             age = form.cleaned_data['age']
-            gender = form.cleaned_data['gender']
+            sex = form.cleaned_data['sex']
             weight_kg = form.cleaned_data['weight_kg']
             height_cm = form.cleaned_data['height_cm']
             activity_level = form.cleaned_data['activity_level']
@@ -27,7 +27,7 @@ def nutrition_data(request):
 
             params = {
                 'age': age,
-                'gender': gender,
+                'gender': sex,
                 'weight': weight_kg,
                 'height': height_cm,
                 'activitylevel': activity_level,
