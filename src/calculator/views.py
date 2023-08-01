@@ -13,25 +13,42 @@ def nutrition_data(request):
         if form.is_valid():
             age = form.cleaned_data['age']
             sex = form.cleaned_data['sex']
-            weight_kg = form.cleaned_data['weight_kg']
-            height_cm = form.cleaned_data['height_cm']
             activity_level = form.cleaned_data['activity_level']
             weight_goal = form.cleaned_data['weight_goal']
+
+            params = {
+                'age': age,
+                'gender': sex,
+                'activitylevel': activity_level,
+                'goal': weight_goal,
+            }
+
+            if form.cleaned_data['weight_kg'] is not None and form.cleaned_data['height_cm'] is not None:
+                weight_kg = form.cleaned_data['weight_kg']
+                height_cm = form.cleaned_data['height_cm']
+
+                params['weight'] = weight_kg
+                params['height'] = height_cm
+
+            elif form.cleaned_data['weight_lb'] is not None and form.cleaned_data['height_ft'] is not None and form.cleaned_data['height_in'] is not None:
+                weight_lb = form.cleaned_data['weight_lb']
+                height_ft = form.cleaned_data['height_ft']
+                height_in = form.cleaned_data['height_in']
+
+                weight_kg = float(weight_lb) * 0.453592
+                height_cm = (height_ft * 12 + float(height_in)) * 2.54
+
+                params['weight'] = weight_kg
+                params['height'] = height_cm
+
+            else:
+                return render(request, 'calculator/error.html', {'error_message': 'Invalid form data.'})
 
             url = 'https://fitness-calculator.p.rapidapi.com/macrocalculator'
 
             headers = {
                 "X-RapidAPI-Key": settings.API_KEY,
                 "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com"
-            }
-
-            params = {
-                'age': age,
-                'gender': sex,
-                'weight': weight_kg,
-                'height': height_cm,
-                'activitylevel': activity_level,
-                'goal': weight_goal,
             }
 
             try:
