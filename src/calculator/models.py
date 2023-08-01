@@ -6,6 +6,9 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=6, choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2)
     height_cm = models.DecimalField(max_digits=5, decimal_places=2)
+    weight_lb = models.DecimalField(max_digits=5, decimal_places=2)
+    height_ft = models.IntegerField()
+    height_in = models.DecimalField(max_digits=5, decimal_places=2)
     activity_level = models.CharField(max_length=1, choices=[
         ('1', 'BMR'),
         ('2', 'Sedentary: little or no exercise'),

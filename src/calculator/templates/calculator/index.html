@@ -1,14 +1,71 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>MacroCal - Daily Calorie Requirement</title>
-  </head>
-  <body>
-    <h1>Daily Calorie Requirement</h1>
-    <form method="post">
-      {% csrf_token %} 
-      {{ form.as_p }}
-      <input type="submit" value="Calculate">
-    </form>
-  </body>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>MacroCal-FitnessPal</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+        rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+        crossorigin="anonymous">
+    </head>
+    <body>
+        {% include 'calculator/navbar.html' %}
+        <div class="container">
+            <form method="post">
+                {% csrf_token %}
+                <nav>
+                    <div class="nav nav-tabs" role="tablist">
+                        <button class="navlink active" id="nav-metric" data-bs-toggle="tab"
+                        data-bs-target="#Metric" type="button" role="tab"
+                        aria-controls="Metric" aria-selected="true">
+                        Metric
+                        </button>
+
+                        <button class="navlink" id="nav-US" data-bs-toggle="tab"
+                        data-bs-target="#US" type="button" role="tab"
+                        aria-controls="US" aria-selected="false">
+                        US Units
+                        </button>
+                    </div>
+                </nav>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active p-3" id="Metric" role="tabpanel">
+                        {{ form.age.label_tag }} {{ form.age }}
+                        <br>
+                        {{ form.sex.label_tag }} {{ form.sex }}
+                        <br>
+                        {{ form.weight_kg.label_tag }} {{ form.weight_kg }}
+                        <br>
+                        {{ form.height_cm.label_tag }} {{ form.height_cm }}
+                        <br>
+                        {{ form.activity_level.label_tag }} {{ form.activity_level }}
+                        <br>
+                        {{ form.weight_goal.label_tag }} {{ form.weight_goal }}
+                    </div>
+
+                    <div class="tab-pane fade p-3" id="US" role="tabpanel">
+                        {{ form.age.label_tag }} {{ form.age }}
+                        <br>
+                        {{ form.sex.label_tag }} {{ form.sex }}
+                        <br>
+                        {{ form.weight_lb.label_tag }} {{ form.weight_lb }}
+                        <br>
+                        {{ form.height_ft.label_tag }} {{ form.height_ft }} (in):
+                        {{ form.height_in }}
+                        <br>
+                        {{ form.activity_level.label_tag }} {{ form.activity_level }}
+                        <br>
+                        {{ form.weight_goal.label_tag }} {{ form.weight_goal }}
+                    </div>
+                </div>
+
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    </body>
 </html>
+
