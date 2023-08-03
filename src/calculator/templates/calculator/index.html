@@ -12,23 +12,24 @@
         {% include 'calculator/navbar.html' %}
         <div class="container">
             <nav>
-                <div class="nav nav-tabs" role="tablist">
-                    <button class="navlink active" id="nav-metric" data-bs-toggle="tab"
-                        data-bs-target="#Metric" type="button" role="tab"
-                        aria-controls="Metric" aria-selected="true">
+                <div class="nav nav-tabs" id="unit-tab" role="tablist">
+                    <button class="nav-link active" id="nav-metric-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-metric" type="button" role="tab"
+                        aria-controls="nav-metric" aria-selected="true">
                         Metric
                     </button>
 
-                    <button class="navlink" id="nav-US" data-bs-toggle="tab"
-                        data-bs-target="#US" type="button" role="tab"
-                        aria-controls="US" aria-selected="false">
+                    <button class="nav-link" id="nav-us-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-us" type="button" role="tab"
+                        aria-controls="nav-us" aria-selected="false">
                         US Units
                     </button>
                 </div>
             </nav>
 
             <div class="tab-content">
-                <div class="tab-pane fade show active p-3" id="Metric" role="tabpanel">
+                <div class="tab-pane fade show active p-3" id="nav-metric" role="tabpanel"
+                    aria-labelledby="nav-metric-tab">
                     <form method="post">
                         {% csrf_token %}
                         {{ form.age.label_tag }} {{ form.age }}
@@ -47,7 +48,8 @@
                     </form>
                 </div>
 
-                <div class="tab-pane fade p-3" id="US" role="tabpanel">
+                <div class="tab-pane fade p-3" id="nav-us" role="tabpanel"
+                    aria-labelledby="nav-us-tab">
                     <form method="post">
                         {% csrf_token %}
                         {{ form.age.label_tag }} {{ form.age }}
