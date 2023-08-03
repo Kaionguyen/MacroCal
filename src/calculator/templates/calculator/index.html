@@ -16,9 +16,35 @@
                 {% include 'calculator/navbar.html' %}
             </div>
         </div>
-        <div class="container-xl">
-            <div class"row">
-                {% include 'calculator/tabs.html' %}
+        
+        <div class="container-xxl gy-10">
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'calculator/tabs.html' %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col text-center">
+                                <h2>Sign in</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {% include 'calculator/login.html' %}
+                            </div>
+                            <div class="col">
+                                <ul>
+                                    <li>Perk 1</li>
+                                    <li>Perk 2</li>
+                                    <li>Perk 3</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -26,4 +52,3 @@
         crossorigin="anonymous"></script>
     </body>
 </html>
-

@@ -1,0 +1,22 @@
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <input type="email" class="form-control" name="email", placeholder="Email">
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password" placeholder="Password">
+        <p><a href="#" class="link-primary">Forgot password?</a></p>
+    </div>
+    <div class="container-fluid gx-0">
+        <div class="row gx-0">
+            <div class="col">
+                <div class="d-grid">
+                    <button class="btn btn-primary" type="button">Sign in</button>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <p>Don't have an account? <a href="#" class="link-primary">Sign up</a></p>
+        </div> 
+    </div>
+</form>
