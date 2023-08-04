@@ -1,14 +1,27 @@
 import requests
 from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.conf import settings
 from .forms import UserInfo
 
 
-def nutrition_data(request):
+def home(request):
     form = UserInfo()
 
     if request.method == 'POST':
         form = UserInfo(request.POST)
+
+        email = request.POST['email']
+        password = request.POST['password']
+
+        # Authentication
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Successfully logged in")
+        else:
+            messages.error(request, "Invalid email address or password")
 
         if form.is_valid():
             age = form.cleaned_data['age']
@@ -30,7 +43,8 @@ def nutrition_data(request):
                 params['weight'] = weight_kg
                 params['height'] = height_cm
 
-            elif form.cleaned_data['weight_lb'] is not None and form.cleaned_data['height_ft'] is not None and form.cleaned_data['height_in'] is not None:
+            elif form.cleaned_data['weight_lb'] is not None and form.cleaned_data['height_ft'] is not None \
+                    and form.cleaned_data['height_in'] is not None:
                 weight_lb = form.cleaned_data['weight_lb']
                 height_ft = form.cleaned_data['height_ft']
                 height_in = form.cleaned_data['height_in']
@@ -64,3 +78,7 @@ def nutrition_data(request):
                 return render(request, 'calculator/error.html', {'error_message': error_message})
 
     return render(request, 'calculator/index.html', {'form': form})
+
+
+def signup(request):
+    pass
