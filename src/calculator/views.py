@@ -6,7 +6,7 @@ from django.conf import settings
 from .forms import UserInfo
 
 
-def home(request):
+def landing_page(request):
     form = UserInfo()
 
     if request.method == 'POST':
