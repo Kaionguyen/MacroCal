@@ -1,17 +1,29 @@
 <form method="POST">
     {% csrf_token %}
-    <div class="mb-3">
-        <input type="email" class="form-control" name="email", placeholder="Email">
+    <div class="row">
+        <div class="col text-center">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="padding-bottom: unset;">
+                    <p style="font-size: 14px;">{{ message }}</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
     <div class="mb-3">
-        <input type="password" class="form-control" name="password" placeholder="Password">
+        <input type="email" class="form-control" name="email", placeholder="Email" required>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
         <p><a href="#" class="link-primary">Forgot password?</a></p>
     </div>
     <div class="container-fluid gx-0">
         <div class="row gx-0">
             <div class="col">
                 <div class="d-grid">
-                    <button class="btn btn-primary" type="button">Sign in</button>
+                    <button class="btn btn-primary" type="submit">Sign in</button>
                 </div>
             </div>
         </div> 
@@ -20,3 +32,4 @@
         </div> 
     </div>
 </form>
+
