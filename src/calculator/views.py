@@ -1,84 +1,126 @@
 import requests
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
-from .forms import UserInfo
+from .forms import MacroCal, SignUp
 
 
 def landing_page(request):
-    form = UserInfo()
+    macrocal_form = MacroCal()
+    signup_form = SignUp()
 
-    if request.method == 'POST':
-        form = UserInfo(request.POST)
+    context = {
+        "macrocal_form": macrocal_form,
+        "signup_form": signup_form,
+    }
 
-        email = request.POST['email']
-        password = request.POST['password']
+    return render(request, 'calculator/index.html', context)
 
-        # Authentication
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, "Successfully logged in")
-        else:
-            messages.error(request, "Invalid email address or password")
 
-        if form.is_valid():
-            age = form.cleaned_data['age']
-            sex = form.cleaned_data['sex']
-            activity_level = form.cleaned_data['activity_level']
-            weight_goal = form.cleaned_data['weight_goal']
+def macro_cal(request):
+    if request.method == "POST":
+        macrocal_form = MacroCal(request.POST)
+
+        if macrocal_form.is_valid():
+            age = macrocal_form.cleaned_data["age"]
+            sex = macrocal_form.cleaned_data["sex"]
+            activity_level = macrocal_form.cleaned_data["activity_level"]
+            weight_goal = macrocal_form.cleaned_data["weight_goal"]
 
             params = {
-                'age': age,
-                'gender': sex,
-                'activitylevel': activity_level,
-                'goal': weight_goal,
+                "age": age,
+                "gender": sex,
+                "activitylevel": activity_level,
+                "goal": weight_goal,
             }
 
-            if form.cleaned_data['weight_kg'] is not None and form.cleaned_data['height_cm'] is not None:
-                weight_kg = form.cleaned_data['weight_kg']
-                height_cm = form.cleaned_data['height_cm']
+            if (
+                macrocal_form.cleaned_data["weight_kg"] is not None
+                and macrocal_form.cleaned_data["height_cm"] is not None
+            ):
+                weight_kg = macrocal_form.cleaned_data["weight_kg"]
+                height_cm = macrocal_form.cleaned_data["height_cm"]
 
-                params['weight'] = weight_kg
-                params['height'] = height_cm
+                params["weight"] = weight_kg
+                params["height"] = height_cm
 
-            elif form.cleaned_data['weight_lb'] is not None and form.cleaned_data['height_ft'] is not None \
-                    and form.cleaned_data['height_in'] is not None:
-                weight_lb = form.cleaned_data['weight_lb']
-                height_ft = form.cleaned_data['height_ft']
-                height_in = form.cleaned_data['height_in']
+            elif (
+                macrocal_form.cleaned_data["weight_lb"] is not None
+                and macrocal_form.cleaned_data["height_ft"] is not None
+                and macrocal_form.cleaned_data["height_in"] is not None
+            ):
+                weight_lb = macrocal_form.cleaned_data["weight_lb"]
+                height_ft = macrocal_form.cleaned_data["height_ft"]
+                height_in = macrocal_form.cleaned_data["height_in"]
 
                 weight_kg = float(weight_lb) * 0.453592
                 height_cm = (height_ft * 12 + float(height_in)) * 2.54
 
-                params['weight'] = weight_kg
-                params['height'] = height_cm
+                params["weight"] = weight_kg
+                params["height"] = height_cm
 
             else:
-                return render(request, 'calculator/error.html', {'error_message': 'Invalid form data.'})
+                return render(
+                    request,
+                    "calculator/error.html",
+                    {"error_message": "Invalid macrocal_form data."},
+                )
 
-            url = 'https://fitness-calculator.p.rapidapi.com/macrocalculator'
+            url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
 
             headers = {
                 "X-RapidAPI-Key": settings.API_KEY,
-                "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com"
+                "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
             }
 
             try:
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
 
-                calories = round(response_data['data']['calorie'])
+                calories = round(response_data["data"]["calorie"])
 
-                return render(request, 'calculator/result.html', {'calories': calories})
+                return render(request, "calculator/result.html", {"calories": calories})
 
             except requests.exceptions.RequestException as e:
                 error_message = str(e)
-                return render(request, 'calculator/error.html', {'error_message': error_message})
+                return render(
+                    request, "calculator/error.html", {"error_message": error_message}
+                )
+    else:
+        macrocal_form = MacroCal()
+        return render(request, "calculator/index.html", {"macrocal_form": macrocal_form})
 
-    return render(request, 'calculator/index.html', {'form': form})
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Successfully Logged In")
+            return redirect("home")
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect("home")
 
 
-def signup(request):
-    pass
+def sign_up(request):
+    if request.method == "POST":
+        sign_form = SignUp(request.POST)
+
+        if sign_form.is_valid():
+            sign_form.save()
+
+            username = sign_form.cleaned_data["username"]
+            password = sign_form.cleaned_data["password1"]
+
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+            messages.success(request, "Successfully Signed Up")
+            return redirect("home")
+    else:
+        sign_form = SignUp()
+        return render(request, "calculator/index.html", {"sign_form": sign_form})

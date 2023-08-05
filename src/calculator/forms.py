@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
 
-class UserInfo(forms.Form):
+class MacroCal(forms.Form):
     age = forms.IntegerField(label='Age', min_value=0, max_value=80)
     sex = forms.ChoiceField(label='Sex', choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = forms.DecimalField(label='Weight (kg)', min_value=40, max_value=160, required=False)
@@ -41,13 +41,13 @@ class SignUp(UserCreationForm):
 
     class Meta:
         model = User
-        feilds = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super(SignUp, self).__init__(*args, **kwargs)
 
         self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['username'].widget.attrs['placeholder'] = 'User Name'
+        self.fields['username'].widget.attrs['placeholder'] = 'Username'
         self.fields['username'].label = ''
         self.fields['username'].help_text = '<span class="form-text text-muted"><small>Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.</small></span>'
 

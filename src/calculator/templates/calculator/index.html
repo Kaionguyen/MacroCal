@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,8 +8,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
         rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
         crossorigin="anonymous">
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'calculator/style.css' %}">
     </head>
     <body>
         <div class="container-fluid">
@@ -16,21 +15,33 @@
                 {% include 'calculator/navbar.html' %}
             </div>
         </div>
-        
-        <div class="container-xxl gy-10">
+        <div class="container">
             <div class="row">
                 <div class="col-md-6">
+                    <nav>
+                        <div class="nav nav-tabs" id="unit-tab" role="tablist">
+                            <button class="nav-link active" id="nav-metric-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-metric" type="button" role="tab"
+                                aria-controls="nav-metric" aria-selected="true">
+                                Metric
+                            </button>
+                            <button class="nav-link" id="nav-us-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-us" type="button" role="tab"
+                                aria-controls="nav-us" aria-selected="false">
+                                US Units
+                            </button>
+                        </div>
+                    </nav>
                     {% include 'calculator/tabs.html' %}
                 </div>
-
                 <div class="col-md-6">
                     <div class="container">
                         <div class="row">
                             <div class="col text-center">
-                                <h2>Sign in</h2>
+                                <h2 id="dynamic-header"></h2>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" id="login-section">
                             <div class="col">
                                 {% include 'calculator/login.html' %}
                             </div>
@@ -42,11 +53,17 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="row" id="signup-section">
+                            <div class="col">
+                                {% include 'calculator/signup.html' %}
+                                <p>Already have an account? <a id="switch-to-login" class="link-primary">Log in</a></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
+        <script src="{% static 'calculator/js/account.js' %}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>

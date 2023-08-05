@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class UserProfile(models.Model):
+class MacroCal(models.Model):
     age = models.IntegerField()
     gender = models.CharField(max_length=6, choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2)
