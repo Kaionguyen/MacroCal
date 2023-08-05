@@ -107,7 +107,7 @@ def user_login(request):
             return redirect("home")
 
 
-def sign_up(request):
+def user_signup(request):
     if request.method == "POST":
         signup_form = SignUp(request.POST)
 
@@ -124,3 +124,9 @@ def sign_up(request):
     else:
         signup_form = SignUp()
         return render(request, "calculator/base.html", {"signup_form": signup_form})
+
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, "Successfully logged out")
+    return redirect("home")
