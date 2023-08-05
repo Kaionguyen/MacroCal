@@ -15,7 +15,7 @@ def landing_page(request):
         "signup_form": signup_form,
     }
 
-    return render(request, 'calculator/index.html', context)
+    return render(request, 'calculator/base.html', context)
 
 
 def macro_cal(request):
@@ -89,7 +89,7 @@ def macro_cal(request):
                 )
     else:
         macrocal_form = MacroCal()
-        return render(request, "calculator/index.html", {"macrocal_form": macrocal_form})
+        return render(request, "calculator/base.html", {"macrocal_form": macrocal_form})
 
 
 def user_login(request):
@@ -109,18 +109,18 @@ def user_login(request):
 
 def sign_up(request):
     if request.method == "POST":
-        sign_form = SignUp(request.POST)
+        signup_form = SignUp(request.POST)
 
-        if sign_form.is_valid():
-            sign_form.save()
+        if signup_form.is_valid():
+            signup_form.save()
 
-            username = sign_form.cleaned_data["username"]
-            password = sign_form.cleaned_data["password1"]
+            username = signup_form.cleaned_data["username"]
+            password = signup_form.cleaned_data["password1"]
 
             user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "Successfully Signed Up")
             return redirect("home")
     else:
-        sign_form = SignUp()
-        return render(request, "calculator/index.html", {"sign_form": sign_form})
+        signup_form = SignUp()
+        return render(request, "calculator/base.html", {"signup_form": signup_form})

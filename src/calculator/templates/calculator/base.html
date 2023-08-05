@@ -34,11 +34,13 @@
                     </nav>
                     {% include 'calculator/tabs.html' %}
                 </div>
+                {% if user.is_authenticated %}
+                {% else %}
                 <div class="col-md-6">
                     <div class="container">
                         <div class="row">
                             <div class="col text-center">
-                                <h2 id="dynamic-header"></h2>
+                                <h2 id="dynamic-header">Sign in</h2>
                             </div>
                         </div>
                         <div class="row" id="login-section">
@@ -53,14 +55,15 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="row" id="signup-section">
+                        <div class="row" id="signup-section" style="display: none">
                             <div class="col">
                                 {% include 'calculator/signup.html' %}
-                                <p>Already have an account? <a id="switch-to-login" class="link-primary">Log in</a></p>
+                                <p>Already have an account? <a href="javascript:void(0)" id="switch-to-login" class="link-primary">Log in</a></p>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
         <script src="{% static 'calculator/js/account.js' %}"></script>
