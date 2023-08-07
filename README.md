@@ -4,8 +4,9 @@
 * ~~macrocalculator endpoint~~
 * ~~USCS~~
 * ~~User Login/Logout and Sign up~~
-* Forgot Password
+* ~~Forgot Password~~
 * macros
+* Results Page
 * database
 * User Profile
 * nutrition api
