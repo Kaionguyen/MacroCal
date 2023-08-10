@@ -1,7 +1,9 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
-class MacroCal(models.Model):
+class UserStats(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField()
     gender = models.CharField(max_length=6, choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2)
