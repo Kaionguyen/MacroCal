@@ -15,7 +15,7 @@ def landing_page(request):
         "signup_form": signup_form,
     }
 
-    return render(request, 'calculator/base.html', context)
+    return render(request, "calculator/base.html", context)
 
 
 def macro_cal(request):
@@ -78,9 +78,8 @@ def macro_cal(request):
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
 
-                calories = round(response_data["data"]["calorie"])
 
-                return render(request, "calculator/result.html", {"calories": calories})
+                return render(request, "calculator/result.html", {"response_data": response_data})
 
             except requests.exceptions.RequestException as e:
                 error_message = str(e)
