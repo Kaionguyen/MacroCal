@@ -29,3 +29,6 @@ class UserStat(models.Model):
         ('weightgain', 'Weight gain'),
         ('extremegain', 'Extreme weight gain')
     ])
+
+    def __str__(self):
+        return self.user.get_username()
