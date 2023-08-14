@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import UserStat, Macro
 
-# Register your models here.
+admin.site.register(UserStat)
+admin.site.register(Macro)

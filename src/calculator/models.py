@@ -32,3 +32,20 @@ class UserStat(models.Model):
 
     def __str__(self):
         return self.user.get_username()
+
+
+class Macro(models.Model):
+    input_data = models.OneToOneField(UserStat, on_delete=models.CASCADE)
+    calorie = models.PositiveIntegerField()
+    balanced_protein = models.DecimalField(max_digits=10, decimal_places=2)
+    balanced_fat = models.DecimalField(max_digits=10, decimal_places=2)
+    balanced_carbs = models.DecimalField(max_digits=10, decimal_places=2)
+    lowfat_protein = models.DecimalField(max_digits=10, decimal_places=2)
+    lowfat_fat = models.DecimalField(max_digits=10, decimal_places=2)
+    lowfat_carbs = models.DecimalField(max_digits=10, decimal_places=2)
+    lowcarb_protein = models.DecimalField(max_digits=10, decimal_places=2)
+    lowcarb_fat = models.DecimalField(max_digits=10, decimal_places=2)
+    lowcarb_carbs = models.DecimalField(max_digits=10, decimal_places=2)
+    highprotein_protein = models.DecimalField(max_digits=10, decimal_places=2)
+    highprotein_fat = models.DecimalField(max_digits=10, decimal_places=2)
+    highprotein_carbs = models.DecimalField(max_digits=10, decimal_places=2)
