@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./calculator/static/calculator/js/",  // Output directory for compiled JS files
+    "rootDir": "./calculator/static/calculator/js/" // Source directory for TypeScript files
+  }
+}
+
