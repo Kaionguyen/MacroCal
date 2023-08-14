@@ -3,15 +3,17 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
-from .forms import MacroCal, SignUp
+from .forms import UsForm, MetricForm, SignUp
 
 
 def landing_page(request):
-    macrocal_form = MacroCal()
+    metric_form = MetricForm()
+    us_form = UsForm()
     signup_form = SignUp()
 
     context = {
-        "macrocal_form": macrocal_form,
+        "metric_form": metric_form,
+        "us_form": us_form,
         "signup_form": signup_form,
     }
 
@@ -19,53 +21,23 @@ def landing_page(request):
 
 
 def macro_cal(request):
+    metric_form = MetricForm(request.POST or None)
+    us_form = UsForm(request.POST or None)
+
     if request.method == "POST":
-        macrocal_form = MacroCal(request.POST)
+        if metric_form.is_valid() and "metric-form-submit" in request.POST:
+            age = metric_form.cleaned_data["age"]
+            sex = metric_form.cleaned_data["sex"]
+            weight_kg = metric_form.cleaned_data["weight_kg"]
+            height_cm = metric_form.cleaned_data["height_cm"]
+            activity_level = metric_form.cleaned_data["activity_level"]
+            weight_goal = metric_form.cleaned_data["weight_goal"]
 
-        if macrocal_form.is_valid():
-            age = macrocal_form.cleaned_data["age"]
-            sex = macrocal_form.cleaned_data["sex"]
-            activity_level = macrocal_form.cleaned_data["activity_level"]
-            weight_goal = macrocal_form.cleaned_data["weight_goal"]
+            instance = metric_form.save(commit=False)
 
-            params = {
-                "age": age,
-                "gender": sex,
-                "activitylevel": activity_level,
-                "goal": weight_goal,
-            }
-
-            if (
-                macrocal_form.cleaned_data["weight_kg"] is not None
-                and macrocal_form.cleaned_data["height_cm"] is not None
-            ):
-                weight_kg = macrocal_form.cleaned_data["weight_kg"]
-                height_cm = macrocal_form.cleaned_data["height_cm"]
-
-                params["weight"] = weight_kg
-                params["height"] = height_cm
-
-            elif (
-                macrocal_form.cleaned_data["weight_lb"] is not None
-                and macrocal_form.cleaned_data["height_ft"] is not None
-                and macrocal_form.cleaned_data["height_in"] is not None
-            ):
-                weight_lb = macrocal_form.cleaned_data["weight_lb"]
-                height_ft = macrocal_form.cleaned_data["height_ft"]
-                height_in = macrocal_form.cleaned_data["height_in"]
-
-                weight_kg = float(weight_lb) * 0.453592
-                height_cm = (height_ft * 12 + float(height_in)) * 2.54
-
-                params["weight"] = weight_kg
-                params["height"] = height_cm
-
-            else:
-                return render(
-                    request,
-                    "calculator/error.html",
-                    {"error_message": "Invalid macrocal_form data."},
-                )
+            if request.user.is_authenticated:
+                instance.user = request.user
+                instance.save()
 
             url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
 
@@ -74,10 +46,61 @@ def macro_cal(request):
                 "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
             }
 
+            params = {
+
+                "age": age,
+                "gender": sex,
+                "weight": weight_kg,
+                "height": height_cm,
+                "activitylevel": activity_level,
+                "goal": weight_goal,
+            }
+
             try:
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
 
+                return render(request, "calculator/result.html", {"response_data": response_data})
+
+            except requests.exceptions.RequestException as e:
+                error_message = str(e)
+                return render(
+                    request, "calculator/error.html", {"error_message": error_message}
+                )
+
+        elif us_form.is_valid() and "us-form-submit" in request.POST:
+            age = us_form.cleaned_data["age"]
+            sex = us_form.cleaned_data["sex"]
+            weight_kg = us_form.cleaned_data["weight_kg"]
+            height_cm = us_form.cleaned_data["height_cm"]
+            activity_level = us_form.cleaned_data["activity_level"]
+            weight_goal = us_form.cleaned_data["weight_goal"]
+
+            instance = us_form.save(commit=False)
+
+            if request.user.is_authenticated:
+                instance.user = request.user
+                instance.save()
+
+            url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
+
+            headers = {
+                "X-RapidAPI-Key": settings.API_KEY,
+                "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
+            }
+
+            params = {
+                "age": age,
+                "gender": sex,
+                "weight": weight_kg,
+                "height": height_cm,
+                "activitylevel": activity_level,
+                "goal": weight_goal,
+            }
+
+            try:
+                response = requests.get(url, headers=headers, params=params)
+                response_data = response.json()
 
                 return render(request, "calculator/result.html", {"response_data": response_data})
 
@@ -87,8 +110,15 @@ def macro_cal(request):
                     request, "calculator/error.html", {"error_message": error_message}
                 )
     else:
-        macrocal_form = MacroCal()
-        return render(request, "calculator/base.html", {"macrocal_form": macrocal_form})
+        metric_form = MetricForm()
+        us_form = UsForm()
+
+        context = {
+            "metric_form": metric_form,
+            "us_form": us_form,
+        }
+
+        return render(request, "calculator/base.html", context)
 
 
 def user_login(request):

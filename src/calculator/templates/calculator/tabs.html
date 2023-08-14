@@ -4,19 +4,8 @@
         aria-labelledby="nav-metric-tab">
         <form method="POST" action="{% url 'macrocal' %}">
             {% csrf_token %}
-            {{ macrocal_form.age.label_tag }} {{ macrocal_form.age }}
-            <br>
-            {{ macrocal_form.sex.label_tag }} {{ macrocal_form.sex }}
-            <br>
-            {{ macrocal_form.weight_kg.label_tag }} {{ macrocal_form.weight_kg }}
-            <br>
-            {{ macrocal_form.height_cm.label_tag }} {{ macrocal_form.height_cm }}
-            <br>
-            {{ macrocal_form.activity_level.label_tag }} {{ macrocal_form.activity_level }}
-            <br>
-            {{ macrocal_form.weight_goal.label_tag }} {{ macrocal_form.weight_goal }}
-            <br>
-            <input type="submit" value="Submit">
+            {{ metric_form.as_p }}
+            <button type="submit" name="metric-form-submit">Submit</button>
         </form>
     </div>
 
@@ -24,20 +13,8 @@
         aria-labelledby="nav-us-tab">
         <form method="POST" action="{% url 'macrocal' %}">
             {% csrf_token %}
-            {{ macrocal_form.age.label_tag }} {{ macrocal_form.age }}
-            <br>
-            {{ macrocal_form.sex.label_tag }} {{ macrocal_form.sex }}
-            <br>
-            {{ macrocal_form.weight_lb.label_tag }} {{ macrocal_form.weight_lb }}
-            <br>
-            {{ macrocal_form.height_ft.label_tag }} {{ macrocal_form.height_ft }} (in):
-            {{ macrocal_form.height_in }}
-            <br>
-            {{ macrocal_form.activity_level.label_tag }} {{ macrocal_form.activity_level }}
-            <br>
-            {{ macrocal_form.weight_goal.label_tag }} {{ macrocal_form.weight_goal }}
-            <br>
-            <input type="submit" value="Submit">
+            {{ us_form.as_p }}
+            <button type="submit" name="us-form-submit">Submit</button>
         </form>
     </div>
 </div>
