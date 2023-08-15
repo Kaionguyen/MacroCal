@@ -17,7 +17,7 @@ def landing_page(request):
         "signup_form": signup_form,
     }
 
-    return render(request, "calculator/base.html", context)
+    return render(request, "calculator/home.html", context)
 
 
 def macro_cal(request):
@@ -118,7 +118,7 @@ def macro_cal(request):
             "us_form": us_form,
         }
 
-        return render(request, "calculator/base.html", context)
+        return render(request, "calculator/home.html", context)
 
 
 def user_login(request):
@@ -152,7 +152,7 @@ def user_signup(request):
             return redirect("home")
     else:
         signup_form = SignUp()
-        return render(request, "calculator/base.html", {"signup_form": signup_form})
+        return render(request, "calculator/home.html", {"signup_form": signup_form})
 
 
 def user_logout(request):

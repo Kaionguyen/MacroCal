@@ -1,0 +1,45 @@
+{% extends 'calculator/base.html' %}
+{% block content %}
+
+<div class="col-md-6">
+    {% include 'calculator/stat-form.html' %}
+</div>
+{% if user.is_authenticated %}
+
+{% else %}
+    <div class="col-md-6">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h2 id="dynamic-header" class="mb-0">Sign in</h2>
+                </div>
+            </div>
+            <div class="row" id="login-section">
+                <div class="col">
+                    <div class="row">
+                        {% include 'calculator/login.html' %}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <ul>
+                            <li>Perk 1</li>
+                            <li>Perk 2</li>
+                            <li>Perk 3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="signup-section" style="display: none">
+                <div class="col">
+                    <div class="row">
+                        {% include 'calculator/signup.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock content %}
+

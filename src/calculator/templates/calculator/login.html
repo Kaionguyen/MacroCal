@@ -1,17 +1,5 @@
 <form method="POST" action="{% url 'login' %}">
     {% csrf_token %}
-    <div class="row">
-        <div class="col text-center">
-            {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="padding-bottom: unset;">
-                    <p style="font-size: 14px;">{{ message }}</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
     <div class="mb-3">
         <input type="text" class="form-control" name="username", placeholder="Username" required>
     </div>
@@ -32,4 +20,3 @@
         </div> 
     </div>
 </form>
-
