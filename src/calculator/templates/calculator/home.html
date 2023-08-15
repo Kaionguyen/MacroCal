@@ -1,12 +1,16 @@
 {% extends 'calculator/base.html' %}
 {% block content %}
 
-<div class="col-md-6">
-    {% include 'calculator/stat-form.html' %}
-</div>
 {% if user.is_authenticated %}
-
+    {% if not has_instance %}
+        <div class="col-md-6">
+            {% include 'calculator/stat-form.html' %}
+        </div>
+    {% endif %}
 {% else %}
+    <div class="col-md-6">
+        {% include 'calculator/stat-form.html' %}
+    </div>
     <div class="col-md-6">
         <div class="container">
             <div class="row">

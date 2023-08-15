@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
 from .forms import UsForm, MetricForm, SignUp
+from calculator.models import UserStat
 
 
 def landing_page(request):
@@ -11,10 +12,19 @@ def landing_page(request):
     us_form = UsForm()
     signup_form = SignUp()
 
+    if request.user.is_authenticated:
+        try:
+            has_instance = UserStat.objects.get(user=request.user)
+        except UserStat.DoesNotExist:
+            has_instance = None
+    else:
+        has_instance = None
+
     context = {
         "metric_form": metric_form,
         "us_form": us_form,
         "signup_form": signup_form,
+        "has_instance": has_instance,
     }
 
     return render(request, "calculator/home.html", context)
@@ -149,7 +159,7 @@ def user_signup(request):
             user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "Successfully Signed Up")
-            return redirect("home")
+            return redirect("macrocal")
     else:
         signup_form = SignUp()
         return render(request, "calculator/home.html", {"signup_form": signup_form})
