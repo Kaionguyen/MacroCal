@@ -69,6 +69,7 @@ def macro_cal(request):
             try:
                 response = requests.get(url, headers=headers, params=params)
                 response_data = response.json()
+                response_data = response_data['data']
 
                 return render(request, "calculator/result.html", {"response_data": response_data})
 
