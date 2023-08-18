@@ -9,7 +9,7 @@ from calculator.models import UserStat
 
 def landing_page(request):
     metric_form = MetricForm()
-    us_form = UsForm()
+    imperial_form = UsForm()
     signup_form = SignUp()
 
     if request.user.is_authenticated:
@@ -22,7 +22,7 @@ def landing_page(request):
 
     context = {
         "metric_form": metric_form,
-        "us_form": us_form,
+        "imperial_form": imperial_form,
         "signup_form": signup_form,
         "has_instance": has_instance,
     }
@@ -30,20 +30,20 @@ def landing_page(request):
     return render(request, "calculator/home.html", context)
 
 
-def macro_cal(request):
-    metric_form = MetricForm(request.POST or None)
-    us_form = UsForm(request.POST or None)
+def metric(request):
+    return calculate_macros(request, MetricForm)
 
+
+def imperial(request):
+    return calculate_macros(request, UsForm)
+
+
+def calculate_macros(request, form_choice):
     if request.method == "POST":
-        if metric_form.is_valid() and "metric-form-submit" in request.POST:
-            age = metric_form.cleaned_data["age"]
-            sex = metric_form.cleaned_data["sex"]
-            weight_kg = metric_form.cleaned_data["weight_kg"]
-            height_cm = metric_form.cleaned_data["height_cm"]
-            activity_level = metric_form.cleaned_data["activity_level"]
-            weight_goal = metric_form.cleaned_data["weight_goal"]
+        form = form_choice(request.POST)
 
-            instance = metric_form.save(commit=False)
+        if form.is_valid():
+            instance = form.save(commit=False)
 
             if request.user.is_authenticated:
                 instance.user = request.user
@@ -57,13 +57,12 @@ def macro_cal(request):
             }
 
             params = {
-
-                "age": age,
-                "gender": sex,
-                "weight": weight_kg,
-                "height": height_cm,
-                "activitylevel": activity_level,
-                "goal": weight_goal,
+                "age": form.cleaned_data["age"],
+                "gender": form.cleaned_data["sex"],
+                "weight": form.cleaned_data["weight_kg"],
+                "height": form.cleaned_data["height_cm"],
+                "activitylevel": form.cleaned_data["activity_level"],
+                "goal": form.cleaned_data["weight_goal"],
             }
 
             try:
@@ -79,57 +78,12 @@ def macro_cal(request):
                     request, "calculator/error.html", {"error_message": error_message}
                 )
 
-        elif us_form.is_valid() and "us-form-submit" in request.POST:
-            age = us_form.cleaned_data["age"]
-            sex = us_form.cleaned_data["sex"]
-            weight_kg = us_form.cleaned_data["weight_kg"]
-            height_cm = us_form.cleaned_data["height_cm"]
-            activity_level = us_form.cleaned_data["activity_level"]
-            weight_goal = us_form.cleaned_data["weight_goal"]
-
-            instance = us_form.save(commit=False)
-
-            if request.user.is_authenticated:
-                instance.user = request.user
-                instance.save()
-
-            url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
-
-            headers = {
-                "X-RapidAPI-Key": settings.API_KEY,
-                "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
-            }
-
-            params = {
-                "age": age,
-                "gender": sex,
-                "weight": weight_kg,
-                "height": height_cm,
-                "activitylevel": activity_level,
-                "goal": weight_goal,
-            }
-
-            try:
-                response = requests.get(url, headers=headers, params=params)
-                response_data = response.json()
-
-                return render(request, "calculator/result.html", {"response_data": response_data})
-
-            except requests.exceptions.RequestException as e:
-                error_message = str(e)
-                return render(
-                    request, "calculator/error.html", {"error_message": error_message}
-                )
     else:
-        metric_form = MetricForm()
-        us_form = UsForm()
+        form = form_choice()
 
-        context = {
-            "metric_form": metric_form,
-            "us_form": us_form,
-        }
+    context = {"form": form}
 
-        return render(request, "calculator/home.html", context)
+    return render(request, "calculator/home.html", context)
 
 
 def user_login(request):

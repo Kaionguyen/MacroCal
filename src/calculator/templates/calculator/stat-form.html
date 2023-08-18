@@ -6,9 +6,9 @@
                 aria-controls="nav-metric" aria-selected="true">
                 Metric
             </button>
-            <button class="nav-link" id="nav-us-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-us" type="button" role="tab"
-                aria-controls="nav-us" aria-selected="false">
+            <button class="nav-link" id="nav-imperial-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-imperial" type="button" role="tab"
+                aria-controls="nav-imperial" aria-selected="false">
                 US Units
             </button>
         </div>
@@ -16,19 +16,19 @@
     <div class="tab-content">
         <div class="tab-pane fade show active p-3" id="nav-metric" role="tabpanel"
             aria-labelledby="nav-metric-tab">
-            <form method="POST" action="{% url 'macrocal' %}">
+            <form method="POST" action="{% url 'metric' %}">
                 {% csrf_token %}
                 {{ metric_form.as_p }}
-                <button type="submit" name="metric-form-submit">Submit</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
 
-        <div class="tab-pane fade p-3" id="nav-us" role="tabpanel"
-            aria-labelledby="nav-us-tab">
-            <form method="POST" action="{% url 'macrocal' %}">
+        <div class="tab-pane fade p-3" id="nav-imperial" role="tabpanel"
+            aria-labelledby="nav-imperial-tab">
+            <form method="POST" action="{% url 'imperial' %}">
                 {% csrf_token %}
-                {{ us_form.as_p }}
-                <button type="submit" name="us-form-submit">Submit</button>
+                {{ imperial_form.as_p }}
+                <button type="submit">Submit</button>
             </form>
         </div>
     </div>

@@ -42,7 +42,7 @@ class MetricForm(ModelForm):
         return instance
 
 
-class UsForm(ModelForm):
+class ImperialForm(ModelForm):
     class Meta:
         model = UserStat
         fields = ('age', 'sex', 'weight_lb', 'height_ft', 'height_in', 'activity_level', 'weight_goal')
