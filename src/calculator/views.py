@@ -65,28 +65,24 @@ def calculate_macros(request, form_choice):
                 response_data = response_data['data']
 
                 if request.user.is_authenticated:
+                    instance = form.save(commit=False)
+                    instance.user = request.user
+                    instance.save()
+
                     balanced_data = response_data['balanced']
                     lowcarb_data = response_data['lowcarbs']
                     lowfat_data = response_data['lowfat']
                     highprotein_data = response_data['highprotein']
 
-                    balanced_macro = MacroDistribution.objects.create(**balanced_data)
-                    lowcarb_macro = MacroDistribution.objects.create(**lowcarb_data)
-                    lowfat_macro = MacroDistribution.objects.create(**lowfat_data)
-                    highprotein_macro = MacroDistribution.objects.create(**highprotein_data)
-
                     diet = Diet.objects.create(
                         calorie=response_data['calorie'],
-                        balanced=balanced_macro,
-                        lowfat=lowfat_macro,
-                        lowcarbs=lowcarb_macro,
-                        highprotein=highprotein_macro,
+                        user_stats=instance,
                     )
-                    instance = form.save(commit=False)
-                    instance.user = request.user
 
-                    instance.user_diet = diet
-                    instance.save()
+                    MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet)
+                    MacroDistribution.objects.create(plan_name='Low Fat', **lowcarb_data, user_diet=diet)
+                    MacroDistribution.objects.create(plan_name='Low Carbs', **lowfat_data, user_diet=diet)
+                    MacroDistribution.objects.create(plan_name='High Protein', **highprotein_data, user_diet=diet)
 
                 return render(request, "calculator/result.html", {"response_data": response_data})
 
