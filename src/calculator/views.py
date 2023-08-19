@@ -114,10 +114,9 @@ def user_signup(request):
             user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "Successfully Signed Up")
-            return redirect("macrocal")
-    else:
-        signup_form = SignUp()
-        return render(request, "calculator/home.html", {"signup_form": signup_form})
+            return redirect("home")
+        else:
+            return render(request, "calculator/home.html")
 
 
 def user_logout(request):
