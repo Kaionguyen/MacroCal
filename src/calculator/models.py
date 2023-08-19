@@ -49,7 +49,7 @@ class UserStat(models.Model):
         ('weightgain', 'Weight gain'),
         ('extremegain', 'Extreme weight gain')
     ])
-    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE)
+    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.user.get_username()

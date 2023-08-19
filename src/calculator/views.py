@@ -3,13 +3,13 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.conf import settings
-from .forms import UsForm, MetricForm, SignUp
-from calculator.models import UserStat
+from .forms import ImperialForm, MetricForm, SignUp
+from calculator.models import UserStat, Diet, MacroDistribution
 
 
 def landing_page(request):
     metric_form = MetricForm()
-    imperial_form = UsForm()
+    imperial_form = ImperialForm()
     signup_form = SignUp()
 
     if request.user.is_authenticated:
@@ -35,7 +35,7 @@ def metric(request):
 
 
 def imperial(request):
-    return calculate_macros(request, UsForm)
+    return calculate_macros(request, ImperialForm)
 
 
 def calculate_macros(request, form_choice):
@@ -43,12 +43,6 @@ def calculate_macros(request, form_choice):
         form = form_choice(request.POST)
 
         if form.is_valid():
-            instance = form.save(commit=False)
-
-            if request.user.is_authenticated:
-                instance.user = request.user
-                instance.save()
-
             url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
 
             headers = {
@@ -70,6 +64,30 @@ def calculate_macros(request, form_choice):
                 response_data = response.json()
                 response_data = response_data['data']
 
+                if request.user.is_authenticated:
+                    balanced_data = response_data['balanced']
+                    lowcarb_data = response_data['lowcarbs']
+                    lowfat_data = response_data['lowfat']
+                    highprotein_data = response_data['highprotein']
+
+                    balanced_macro = MacroDistribution.objects.create(**balanced_data)
+                    lowcarb_macro = MacroDistribution.objects.create(**lowcarb_data)
+                    lowfat_macro = MacroDistribution.objects.create(**lowfat_data)
+                    highprotein_macro = MacroDistribution.objects.create(**highprotein_data)
+
+                    diet = Diet.objects.create(
+                        calorie=response_data['calorie'],
+                        balanced=balanced_macro,
+                        lowfat=lowfat_macro,
+                        lowcarbs=lowcarb_macro,
+                        highprotein=highprotein_macro,
+                    )
+                    instance = form.save(commit=False)
+                    instance.user = request.user
+
+                    instance.user_diet = diet
+                    instance.save()
+
                 return render(request, "calculator/result.html", {"response_data": response_data})
 
             except requests.exceptions.RequestException as e:
@@ -80,10 +98,9 @@ def calculate_macros(request, form_choice):
 
     else:
         form = form_choice()
+        context = {"form": form}
 
-    context = {"form": form}
-
-    return render(request, "calculator/home.html", context)
+        return render(request, "calculator/home.html", context)
 
 
 def user_login(request):
