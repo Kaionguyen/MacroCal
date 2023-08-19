@@ -2,26 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class MacroDistribution(models.Model):
-    protein = models.DecimalField(max_digits=5, decimal_places=2)
-    carb = models.DecimalField(max_digits=5, decimal_places=2)
-    fat = models.DecimalField(max_digits=5, decimal_places=2)
-
-    def __str__(self):
-        return f"Protein: {self.protein}, Carb: {self.carb}, Fat: {self.fat}"
-
-
-class Diet(models.Model):
-    calories = models.PositiveIntegerField()
-    balanced = models.OneToOneField(MacroDistribution, on_delete=models.CASCADE, related_name='balanced')
-    lowcarb = models.OneToOneField(MacroDistribution, on_delete=models.CASCADE, related_name='lowcarb')
-    lowfat = models.OneToOneField(MacroDistribution, on_delete=models.CASCADE, related_name='lowfat')
-    highprotein = models.OneToOneField(MacroDistribution, on_delete=models.CASCADE, related_name='highprotein')
-
-    def __str__(self):
-        return f"Calories: {self.calories}, Balanced: {self.balanced}, Low Carb: {self.lowcarb}, Low Fat: {self.lowfat}, High Protein: {self.highprotein}"
-
-
 class UserStat(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     age = models.IntegerField()
@@ -49,7 +29,30 @@ class UserStat(models.Model):
         ('weightgain', 'Weight gain'),
         ('extremegain', 'Extreme weight gain')
     ])
-    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.get_username()
+
+
+class Diet(models.Model):
+    calorie = models.PositiveIntegerField()
+    user_stats = models.OneToOneField(UserStat, on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return f"{self.user_stats.user.username}'s Diet"
+
+
+class MacroDistribution(models.Model):
+    plan_name = models.CharField(max_length=11, choices=[
+        ('balanced', 'Balanced'),
+        ('lowfat', 'Low Fat'),
+        ('lowcarbs', 'Low Carbs'),
+        ('highprotein', 'High Protein'),
+    ], null=True)
+    protein = models.DecimalField(max_digits=5, decimal_places=2)
+    carbs = models.DecimalField(max_digits=5, decimal_places=2)
+    fat = models.DecimalField(max_digits=5, decimal_places=2)
+    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE, default=None)
+
+    def __str__(self):
+        return f"{self.plan_name} diet"
