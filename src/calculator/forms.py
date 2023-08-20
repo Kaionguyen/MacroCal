@@ -7,6 +7,10 @@ from django import forms
 
 
 class MetricForm(ModelForm):
+    age = forms.IntegerField(label='Age', min_value=1, max_value=80)
+    weight_kg = forms.DecimalField(label='Weight (kg)', min_value=40, max_value=160, decimal_places=2)
+    height_cm = forms.DecimalField(label='Height (cm)', min_value=130, max_value=230, decimal_places=2)
+
     class Meta:
         model = UserStat
         fields = ('age', 'sex', 'weight_kg', 'height_cm', 'activity_level', 'weight_goal')
@@ -43,6 +47,11 @@ class MetricForm(ModelForm):
 
 
 class ImperialForm(ModelForm):
+    age = forms.IntegerField(label='Age', min_value=1, max_value=80)
+    weight_lb = forms.DecimalField(label='Weight (lb)', min_value=88.18, max_value=352.74, decimal_places=2)
+    height_ft = forms.IntegerField(label='Height (ft)', min_value=4, max_value=6)
+    height_in = forms.DecimalField(label='Height (in)', min_value=0, max_value=11.99, decimal_places=2)
+
     class Meta:
         model = UserStat
         fields = ('age', 'sex', 'weight_lb', 'height_ft', 'height_in', 'activity_level', 'weight_goal')
