@@ -31,15 +31,15 @@ class UserStat(models.Model):
     ])
 
     def __str__(self):
-        return self.user.get_username()
+        return f"{self.user.username}'s Stats (id: {self.user.id})"
 
 
 class Diet(models.Model):
     calorie = models.PositiveIntegerField()
-    user_stats = models.OneToOneField(UserStat, on_delete=models.CASCADE, default=None)
+    user_stats = models.OneToOneField(UserStat, on_delete=models.CASCADE, default=None, related_name='diet')
 
     def __str__(self):
-        return f"{self.user_stats.user.username}'s Diet"
+        return f"{self.user_stats.user.username}'s Diet (id: {self.user_stats.user.id}))"
 
 
 class MacroDistribution(models.Model):
@@ -52,7 +52,7 @@ class MacroDistribution(models.Model):
     protein = models.DecimalField(max_digits=5, decimal_places=2)
     carbs = models.DecimalField(max_digits=5, decimal_places=2)
     fat = models.DecimalField(max_digits=5, decimal_places=2)
-    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE, default=None)
+    user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE, default=None, related_name='macro_distribution')
 
     def __str__(self):
-        return f"{self.plan_name} diet"
+        return f"{self.plan_name} diet (id: {self.user_diet.user_stats.user.id})"
