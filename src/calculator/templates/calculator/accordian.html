@@ -1,16 +1,16 @@
-<div class="accordion" id="accordionPanelsStayOpenExample">
+<div class="accordion">
   <div class="accordion-item">
     <h2 class="accordion-header">
       <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
           Balanced
       </button>
     </h2>
-    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
       <div class="accordion-body">
           <ul>
-              <li>Protein: {{ response_data.balanced.protein }} grams</li>
-              <li>Fat: {{ response_data.balanced.fat }} grams</li>
-              <li>Carbs: {{ response_data.balanced.carbs }} grams</li>
+              <li>Protein: {{ macros.balanced.protein|floatformat:2 }} grams</li>
+              <li>Fat: {{ macros.balanced.fat|floatformat:2 }} grams</li>
+              <li>Carbs: {{ macros.balanced.carbs|floatformat:2 }} grams</li>
           </ul>
       </div>
     </div>
@@ -24,9 +24,9 @@
     <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
       <div class="accordion-body">
           <ul>
-              <li>Protein: {{ response_data.lowfat.protein }} grams</li>
-              <li>Fat: {{ response_data.lowfat.fat }} grams</li>
-              <li>Carbs: {{ response_data.lowfat.carbs }} grams</li>
+              <li>Protein: {{ macros.lowfat.protein|floatformat:2 }} grams</li>
+              <li>Fat: {{ macros.lowfat.fat|floatformat:2 }} grams</li>
+              <li>Carbs: {{ macros.lowfat.carbs|floatformat:2 }} grams</li>
           </ul>
       </div>
     </div>
@@ -40,9 +40,9 @@
     <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
       <div class="accordion-body">
           <ul>
-              <li>Protein: {{ response_data.lowcarbs.protein }} grams</li>
-              <li>Fat: {{ response_data.lowcarbs.fat }} grams</li>
-              <li>Carbs: {{ response_data.lowcarbs.carbs }} grams</li>
+              <li>Protein: {{ macros.lowcarbs.protein|floatformat:2 }} grams</li>
+              <li>Fat: {{ macros.lowcarbs.fat|floatformat:2 }} grams</li>
+              <li>Carbs: {{ macros.lowcarbs.carbs|floatformat:2 }} grams</li>
           </ul>
       </div>
     </div>
@@ -56,9 +56,9 @@
     <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse">
       <div class="accordion-body">
           <ul>
-              <li>Protein: {{ response_data.highprotein.protein }} grams</li>
-              <li>Fat: {{ response_data.highprotein.fat }} grams</li>
-              <li>Carbs: {{ response_data.highprotein.carbs }} grams</li>
+              <li>Protein: {{ macros.highprotein.protein|floatformat:2 }} grams</li>
+              <li>Fat: {{ macros.highprotein.fat|floatformat:2 }} grams</li>
+              <li>Carbs: {{ macros.highprotein.carbs|floatformat:2 }} grams</li>
           </ul>
       </div>
     </div>
