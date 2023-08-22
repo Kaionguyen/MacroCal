@@ -2,10 +2,12 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-    {% if not has_instance %}
+    {% if not stat_instance %}
         <div class="col-md-6">
             {% include 'calculator/stat-form.html' %}
         </div>
+    {% else %}
+        {% include 'calculator/profile-card.html' %}
     {% endif %}
 {% else %}
     <div class="col-md-6">

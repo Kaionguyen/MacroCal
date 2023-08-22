@@ -14,17 +14,16 @@ def landing_page(request):
 
     if request.user.is_authenticated:
         try:
-            has_instance = UserStat.objects.get(user=request.user)
+            stat_instance = UserStat.objects.get(user=request.user)
         except UserStat.DoesNotExist:
-            has_instance = None
+            stat_instance = None
     else:
-        has_instance = None
+        stat_instance = None
 
     context = {
         "metric_form": metric_form,
         "imperial_form": imperial_form,
         "signup_form": signup_form,
-        "has_instance": has_instance,
     }
 
     return render(request, "calculator/home.html", context)
@@ -65,9 +64,9 @@ def calculate_macros(request, form_choice):
                 response_data = response_data['data']
 
                 if request.user.is_authenticated:
-                    instance = form.save(commit=False)
-                    instance.user = request.user
-                    instance.save()
+                    user_stat = form.save(commit=False)
+                    user_stat.user = request.user
+                    user_stat.save()
 
                     balanced_data = response_data['balanced']
                     lowcarb_data = response_data['lowcarbs']
@@ -76,7 +75,7 @@ def calculate_macros(request, form_choice):
 
                     diet = Diet.objects.create(
                         calorie=response_data['calorie'],
-                        user_stats=instance,
+                        stats=user_stat,
                     )
 
                     MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet)
