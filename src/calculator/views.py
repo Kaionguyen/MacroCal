@@ -131,6 +131,8 @@ def user_login(request):
         else:
             messages.error(request, "Invalid username or password")
             return redirect("home")
+    else:
+        return render(request, "calculator/login.html")
 
 
 def user_signup(request):
@@ -149,6 +151,10 @@ def user_signup(request):
             return redirect("home")
         else:
             return render(request, "calculator/home.html")
+
+    else:
+        signup_form = SignUp()
+        return render(request, "calculator/signup.html", {"signup_form": signup_form})
 
 
 def user_logout(request):

@@ -1,8 +1,6 @@
-<form method="POST" action="{% url 'signup' %}">
-    {% csrf_token %}
-    {{ signup_form.as_p }}
-    <br/>
-    <button type="submit" class="btn btn-secondary">Register</button>
-</form>
-<p>Already have an account? <a href="javascript:void(0)" id="switch-to-login" class="link-primary">Log in</a></p>
+{% extends 'calculator/base.html' %}
+{% block title %}Signup{% endblock %}
 
+{% block content %}
+    {% include 'calculator/signup-form.html' %}
+{% endblock %}

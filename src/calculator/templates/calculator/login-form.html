@@ -1,0 +1,30 @@
+<form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+        <input type="text" class="form-control" name="username", placeholder="Username" required>
+    </div>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+        <p><a href="{% url 'reset_password' %}" class="link-primary">Forgot password?</a></p>
+    </div>
+    <div class="container-fluid gx-0">
+        <div class="row gx-0">
+            <div class="col">
+                <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Sign in</button>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            {% if block.super %}
+                <p>
+                    Don't have an account? <a href="javascript:void(0)" id="switch-to-signup" class="link-primary">Sign up</a>
+                </p>
+            {% else %}
+                <p>
+                    Don't have an account? <a href="{% url 'signup' %}" class="link-primary">Sign up</a>
+                </p>
+            {% endif %}
+        </div> 
+    </div>
+</form>
