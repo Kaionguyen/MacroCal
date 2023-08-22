@@ -26,7 +26,23 @@ def landing_page(request):
         "signup_form": signup_form,
     }
 
-    return render(request, "calculator/home.html", context)
+    if stat_instance:
+        return redirect("profile", pk=stat_instance.pk)
+    else:
+        return render(request, "calculator/home.html", context)
+
+
+def profile(request, pk):
+    user_stat = UserStat.objects.get(pk=pk)
+    diet = Diet.objects.get(stats=user_stat)
+    macros = MacroDistribution.objects.filter(user_diet=diet)
+    macros = {
+        "balanced": macros[0],
+        "lowcarbs": macros[1],
+        "lowfat": macros[2],
+        "highprotein": macros[3],
+    }
+    return render(request, "calculator/profile.html", {"macros": macros})
 
 
 def metric(request):
@@ -78,12 +94,16 @@ def calculate_macros(request, form_choice):
                         stats=user_stat,
                     )
 
-                    MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet)
-                    MacroDistribution.objects.create(plan_name='Low Fat', **lowcarb_data, user_diet=diet)
-                    MacroDistribution.objects.create(plan_name='Low Carbs', **lowfat_data, user_diet=diet)
-                    MacroDistribution.objects.create(plan_name='High Protein', **highprotein_data, user_diet=diet)
+                    macros = {
+                        "balanced": MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet),
+                        "lowcarbs": MacroDistribution.objects.create(plan_name='Low Carb', **lowcarb_data, user_diet=diet),
+                        "lowfat": MacroDistribution.objects.create(plan_name='Low Fat', **lowfat_data, user_diet=diet),
+                        "highprotein": MacroDistribution.objects.create(plan_name='High Protein', **highprotein_data, user_diet=diet),
+                    }
 
-                return render(request, "calculator/result.html", {"response_data": response_data})
+                    return render(request, "calculator/profile.html", {"macros": macros})
+                else:
+                    return render(request, "calculator/profile.html", {"macros": response_data})
 
             except requests.exceptions.RequestException as e:
                 error_message = str(e)

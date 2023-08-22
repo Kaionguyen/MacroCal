@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.landing_page, name="home"),
+    path("profile/<int:pk>/", views.profile, name="profile"),
     path("metric/", views.metric, name="metric"),
     path("imperial/", views.imperial, name="imperial"),
     path("macrocal/", views.calculate_macros, name="macrocal"),
