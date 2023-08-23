@@ -5,12 +5,14 @@
 * ~~USCS~~
 * ~~User Login/Logout and Sign up~~
 * ~~Forgot Password~~
-* macros
-* Results Page
-* database
-* User Profile
-* nutrition api
-* CSV's
-* Style's
+* ~~macros~~
+* ~~database~~
+* ~~User Profile~~
+* Results Page <-
+* Styling
+
+# Extended features maybe:
+* nutrition api / app
+* Downloadable spreadsheet?
 
 
