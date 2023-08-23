@@ -1,4 +1,4 @@
-# MacroCal
+# MacroCal (WIP)
 
 # Things to implement:
 * ~~macrocalculator endpoint~~
@@ -8,11 +8,11 @@
 * ~~macros~~
 * ~~database~~
 * ~~User Profile~~
-* Results Page <-
+* Results Page <- 👨‍💻
+* Downloadable spreadsheet
 * Styling
 
 # Extended features maybe:
 * nutrition api / app
-* Downloadable spreadsheet?
 
 
