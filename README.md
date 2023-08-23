@@ -9,7 +9,7 @@
 * ~~database~~
 * ~~User Profile~~
 * Results Page <- 👨‍💻
-* Downloadable spreadsheet
+* Downloadable spreadsheet / built in diet tracker
 * Styling
 
 # Extended features maybe:
