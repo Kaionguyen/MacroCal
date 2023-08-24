@@ -6,11 +6,11 @@
 </form>
 {% if block.super %}
     <p>
-        Already have an account? <a href="javascript:void(0)" id="switch-to-login" class="link-primary">Log in</a>
+        Already have an account? <a href="{% url 'login' %}" id="switch-to-login" class="link-primary">Log in</a>
     </p>
     {% else %}
     <p>
-        Already have an account? <a href="{% url 'login' %}" id="switch-to-login" class="link-primary">Log in</a>
+        Already have an account? <a href="javascript:void(0)" id="switch-to-login" class="link-primary">Log in</a>
     </p>
 {% endif %}
 
