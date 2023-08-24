@@ -37,6 +37,7 @@ def profile(request, pk):
     diet = Diet.objects.get(stats=user_stat)
     macros = MacroDistribution.objects.filter(user_diet=diet)
     macros = {
+        "calorie": diet.calorie,
         "balanced": macros[0],
         "lowcarbs": macros[1],
         "lowfat": macros[2],

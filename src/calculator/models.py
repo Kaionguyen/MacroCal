@@ -3,7 +3,7 @@ from django.db import models
 
 
 class UserStat(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='stats')
     age = models.IntegerField()
     sex = models.CharField(max_length=6, choices=[('male', 'Male'), ('female', 'Female')])
     weight_kg = models.DecimalField(max_digits=5, decimal_places=2)
