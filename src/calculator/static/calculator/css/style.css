@@ -1,0 +1,3 @@
+.accordion-button:not(.collapsed) {
+  background-color: white;
+}
