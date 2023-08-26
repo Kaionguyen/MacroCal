@@ -17,10 +17,16 @@
                 <div class="col text-center">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-dark alert-dismissible fade show" role="alert" style="padding-bottom: unset;">
+                            <div id="alert-{{ forloop.counter }}" class="alert alert-dark" role="alert" style="padding-bottom: unset;">
                                 <p style="font-size: 17px;">{{ message }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
+                            <script>
+                                setTimeout(function() {
+                                    document.querySelector('#alert-{{ forloop.counter }}').classList.remove('show');
+                                    document.querySelector('#alert-{{ forloop.counter }}').classList.add('fade');
+                                    document.querySelector('#alert-{{ forloop.counter }}').style.display = 'none';
+                                }, 3000); // Change 5000 to the desired delay in milliseconds (e.g., 5000ms = 5 seconds)
+                            </script>
                         {% endfor %}
                     {% endif %}
                 </div>
