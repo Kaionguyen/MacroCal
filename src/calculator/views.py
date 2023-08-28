@@ -46,6 +46,14 @@ def profile(request, pk):
     return render(request, "calculator/profile.html", {"macros": macros})
 
 
+def edit_profile(request, pk):
+    current_record = UserStat.objects.get(pk=pk)
+    metric_form = MetricForm(instance=current_record)
+    imperial_form = ImperialForm(instance=current_record)
+
+    return render(request, "calculator/edit_profile.html", {"metric_form": metric_form, "imperial_form": imperial_form})
+
+
 def metric(request):
     return calculate_macros(request, MetricForm)
 
@@ -56,7 +64,10 @@ def imperial(request):
 
 def calculate_macros(request, form_choice):
     if request.method == "POST":
-        form = form_choice(request.POST)
+        if UserStat.objects.filter(user=request.user).exists():
+            form = form_choice(request.POST, instance=UserStat.objects.get(user=request.user))
+        else:
+            form = form_choice(request.POST)
 
         if form.is_valid():
             url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
@@ -80,7 +91,52 @@ def calculate_macros(request, form_choice):
                 response_data = response.json()
                 response_data = response_data['data']
 
-                if request.user.is_authenticated:
+                if UserStat.objects.filter(user=request.user).exists():
+                    form.save()
+
+                    balanced_data = response_data['balanced']
+                    lowcarb_data = response_data['lowcarbs']
+                    lowfat_data = response_data['lowfat']
+                    highprotein_data = response_data['highprotein']
+
+                    diet = Diet.objects.get(stats=UserStat.objects.get(user=request.user))
+                    diet.calorie = response_data['calorie']
+                    diet.save(update_fields=['calorie'])
+
+                    macro_distribution = MacroDistribution.objects.filter(user_diet=diet)
+                    for macro in macro_distribution:
+                        if macro.plan_name == 'Balanced':
+                            macro.protein = balanced_data['protein']
+                            macro.carbs = balanced_data['carbs']
+                            macro.fat = balanced_data['fat']
+                            macro.save(update_fields=['protein', 'carbs', 'fat'])
+                        elif macro.plan_name == 'Low Carb':
+                            macro.protein = lowcarb_data['protein']
+                            macro.carbs = lowcarb_data['carbs']
+                            macro.fat = lowcarb_data['fat']
+                            macro.save(update_fields=['protein', 'carbs', 'fat'])
+                        elif macro.plan_name == 'Low Fat':
+                            macro.protein = lowfat_data['protein']
+                            macro.carbs = lowfat_data['carbs']
+                            macro.fat = lowfat_data['fat']
+                            macro.save(update_fields=['protein', 'carbs', 'fat'])
+                        elif macro.plan_name == 'High Protein':
+                            macro.protein = highprotein_data['protein']
+                            macro.carbs = highprotein_data['carbs']
+                            macro.fat = highprotein_data['fat']
+                            macro.save(update_fields=['protein', 'carbs', 'fat'])
+
+                    macros = {
+                        "calorie": round(response_data['calorie']),
+                        "balanced": MacroDistribution.objects.get(plan_name='Balanced', user_diet=diet),
+                        "lowcarbs": MacroDistribution.objects.get(plan_name='Low Carb', user_diet=diet),
+                        "lowfat": MacroDistribution.objects.get(plan_name='Low Fat', user_diet=diet),
+                        "highprotein": MacroDistribution.objects.get(plan_name='High Protein', user_diet=diet),
+                    }
+
+                    return render(request, "calculator/profile.html", {"macros": macros})
+
+                elif request.user.is_authenticated and not UserStat.objects.filter(user=request.user).exists():
                     user_stat = form.save(commit=False)
                     user_stat.user = request.user
                     user_stat.save()
@@ -96,6 +152,7 @@ def calculate_macros(request, form_choice):
                     )
 
                     macros = {
+                        "calorie": round(response_data['calorie']),
                         "balanced": MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet),
                         "lowcarbs": MacroDistribution.objects.create(plan_name='Low Carb', **lowcarb_data, user_diet=diet),
                         "lowfat": MacroDistribution.objects.create(plan_name='Low Fat', **lowfat_data, user_diet=diet),
