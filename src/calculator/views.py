@@ -113,7 +113,7 @@ def calculate_macros(request, form_choice):
                         "highprotein": MacroDistribution.objects.create(plan_name='High Protein', **highprotein_data, user_diet=diet),
                     }
 
-                    return render(request, "calculator/profile.html", {"macros": macros})
+                return render(request, "calculator/profile.html", {"macros": macros})
 
             except requests.exceptions.RequestException as e:
                 error_message = str(e)
