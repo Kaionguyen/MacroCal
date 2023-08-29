@@ -1,35 +1,35 @@
-<div class="row">
-    <nav>
-        <div class="nav nav-tabs" id="unit-tab" role="tablist">
-            <button class="nav-link active" id="nav-metric-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-metric" type="button" role="tab"
-                aria-controls="nav-metric" aria-selected="true">
-                Metric
-            </button>
-            <button class="nav-link" id="nav-imperial-tab" data-bs-toggle="tab"
-                data-bs-target="#nav-imperial" type="button" role="tab"
-                aria-controls="nav-imperial" aria-selected="false">
-                Imperial
-            </button>
-        </div>
-    </nav>
-    <div class="tab-content">
-        <div class="tab-pane fade show active p-3" id="nav-metric" role="tabpanel"
-            aria-labelledby="nav-metric-tab">
-            <form method="POST" action="{% url 'metric' %}">
-                {% csrf_token %}
-                {{ metric_form.as_p }}
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+<nav>
+    <div class="nav nav-tabs" id="unit-tab" role="tablist">
+        <button class="nav-link active" id="nav-metric-tab" data-bs-toggle="tab"
+            data-bs-target="#nav-metric" type="button" role="tab"
+            aria-controls="nav-metric" aria-selected="true">
+            Metric
+        </button>
+        <button class="nav-link" id="nav-imperial-tab" data-bs-toggle="tab"
+            data-bs-target="#nav-imperial" type="button" role="tab"
+            aria-controls="nav-imperial" aria-selected="false">
+            Imperial
+        </button>
+    </div>
+</nav>
+<div class="tab-content">
+    <div class="tab-pane fade show active p-3" id="nav-metric" role="tabpanel"
+        aria-labelledby="nav-metric-tab">
+        <form method="POST" action="{% url 'metric' %}">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="metric">
+            {{ metric_form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
-        <div class="tab-pane fade p-3" id="nav-imperial" role="tabpanel"
-            aria-labelledby="nav-imperial-tab">
-            <form method="POST" action="{% url 'imperial' %}">
-                {% csrf_token %}
-                {{ imperial_form.as_p }}
-                <button type="submit">Submit</button>
-            </form>
-        </div>
+    <div class="tab-pane fade p-3" id="nav-imperial" role="tabpanel"
+        aria-labelledby="nav-imperial-tab">
+        <form method="POST" action="{% url 'imperial' %}">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="imperial">
+            {{ imperial_form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
     </div>
 </div>

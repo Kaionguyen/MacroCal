@@ -13,8 +13,12 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         {% if user.is_authenticated %}
+                            {% if user.stats.diet %}
+                                <a class="nav-link" href="{% url 'profile' pk=user.stats.id %}">Profile</a>
+                            {% endif %}
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                         {% else %}
+                            <a class="nav-link" href="{% url 'home' %}">Home</a>
                             <a class="nav-link" href="{% url 'login' %}">Login</a>
                             <a class="nav-link" href="{% url 'signup' %}">Signup</a>
                         {% endif %}

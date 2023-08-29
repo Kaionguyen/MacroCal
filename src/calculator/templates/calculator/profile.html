@@ -1,24 +1,26 @@
 {% extends 'calculator/base.html' %}
 
 {% block content %}
-
-<div class="container">
-    <div class="row">
-        {% if user.is_authenticated %}
-        <div class="col-md-7 mt-4">
-            {% include 'calculator/profile-card.html' %} 
-        </div>
-        {% endif %}
-        <div class="col">
-            <div class="row">
-                <div class="col text-end">
-                    <a id="collapse-all" href="javascript:void(0)">Collapse All -</a>
-                    <a id="expand-all" href="javascript:void(0)">Expand All +</a>
+    <div class="container">
+        <div class="row">
+            {% if user.is_authenticated %}
+                <div class="col-md-7 mt-4">
+                    {% include 'calculator/profile-card.html' %} 
+                </div>
+            {% endif %}
+            <div class="col">
+                <div class="row">
+                    <div class="col text-end">
+                        <a id="collapse-all" href="javascript:void(0)">Collapse All -</a>
+                        <a id="expand-all" href="javascript:void(0)">Expand All +</a>
+                    </div>
+                    {% include 'calculator/accordian.html' %} 
+                </div>
+                <div class="row">
+                    {% include 'calculator/stat-form.html' %}
                 </div>
             </div>
-            {% include 'calculator/accordian.html' %} 
         </div>
     </div>
-</div>
 {% endblock content %}
 
