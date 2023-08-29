@@ -1,4 +1,5 @@
 {% extends 'calculator/base.html' %}
+{% load static %}
 
 {% block content %}
     <div class="container">
@@ -17,10 +18,13 @@
                     {% include 'calculator/accordian.html' %} 
                 </div>
                 <div class="row">
-                    {% include 'calculator/stat-form.html' %}
+                    {% if not user.is_authenticated %}
+                        {% include 'calculator/stat-form.html' %}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+<script src="{% static 'calculator/js/accordian.js' %}"></script>
 {% endblock content %}
 
