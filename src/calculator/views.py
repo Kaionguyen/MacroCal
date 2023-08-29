@@ -48,8 +48,8 @@ def profile(request, pk):
 
 def edit_profile(request, pk):
     current_record = UserStat.objects.get(pk=pk)
-    metric_form = MetricForm(instance=current_record)
-    imperial_form = ImperialForm(instance=current_record)
+    metric_form = MetricForm(request.POST or None, instance=current_record)
+    imperial_form = ImperialForm(request.POST or None, instance=current_record)
 
     return render(request, "calculator/edit_profile.html", {"metric_form": metric_form, "imperial_form": imperial_form})
 
@@ -64,9 +64,15 @@ def imperial(request):
 
 def calculate_macros(request, form_choice):
     if request.method == "POST":
-        if UserStat.objects.filter(user=request.user).exists():
-            form = form_choice(request.POST, instance=UserStat.objects.get(user=request.user))
+        if request.user.is_authenticated:
+            try:
+                stat_instance = UserStat.objects.get(user=request.user)
+                form = form_choice(request.POST, instance=stat_instance)
+            except UserStat.DoesNotExist:
+                stat_instance = None
+                form = form_choice(request.POST)
         else:
+            stat_instance = None
             form = form_choice(request.POST)
 
         if form.is_valid():
@@ -91,7 +97,7 @@ def calculate_macros(request, form_choice):
                 response_data = response.json()
                 response_data = response_data['data']
 
-                if UserStat.objects.filter(user=request.user).exists():
+                if stat_instance:
                     form.save()
 
                     balanced_data = response_data['balanced']
@@ -136,7 +142,7 @@ def calculate_macros(request, form_choice):
 
                     return render(request, "calculator/profile.html", {"macros": macros})
 
-                elif request.user.is_authenticated and not UserStat.objects.filter(user=request.user).exists():
+                elif request.user.is_authenticated and not stat_instance:
                     user_stat = form.save(commit=False)
                     user_stat.user = request.user
                     user_stat.save()
