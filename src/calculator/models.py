@@ -49,9 +49,9 @@ class MacroDistribution(models.Model):
         ('lowcarbs', 'Low Carbs'),
         ('highprotein', 'High Protein'),
     ], null=True)
-    protein = models.DecimalField(max_digits=5, decimal_places=2)
-    carbs = models.DecimalField(max_digits=5, decimal_places=2)
-    fat = models.DecimalField(max_digits=5, decimal_places=2)
+    protein = models.IntegerField()
+    carbs = models.IntegerField()
+    fat = models.IntegerField()
     user_diet = models.ForeignKey(Diet, on_delete=models.CASCADE, default=None, related_name='macro_distribution')
 
     def __str__(self):
