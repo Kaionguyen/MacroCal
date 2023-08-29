@@ -20,6 +20,7 @@
             <input type="hidden" name="form_type" value="metric">
             {{ metric_form.as_p }}
             <button type="submit">Submit</button>
+            <button type="button" class="clear-fields-button">Clear Fields</button>
         </form>
     </div>
 
@@ -30,6 +31,27 @@
             <input type="hidden" name="form_type" value="imperial">
             {{ imperial_form.as_p }}
             <button type="submit">Submit</button>
+            <button type="button" class="clear-fields-button">Clear Fields</button>
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var clearButtons = document.querySelectorAll(".clear-fields-button");
+
+        clearButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var form = button.closest("form");
+                
+                var inputFields = form.querySelectorAll("input:not([name=csrfmiddlewaretoken])");
+                inputFields.forEach(function (input) {
+                    input.value = "";
+                });
+                var dropdownFields = form.querySelectorAll("select");
+                dropdownFields.forEach(function (select) {
+                    select.selectedIndex = 0;
+                });
+            });
+        });
+    });
+</script>

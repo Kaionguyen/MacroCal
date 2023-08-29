@@ -64,6 +64,7 @@ def calculate_macros(request, form_choice):
                         imperial_form = ImperialForm()
 
                     context = {
+                        "form_type": form_type,
                         "macros": response_data,
                         "metric_form": metric_form,
                         "imperial_form": imperial_form,
