@@ -1,9 +1,8 @@
 import requests
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
 from django.conf import settings
-from .forms import ImperialForm, MetricForm, SignUp
+from .forms import ImperialForm, MetricForm
+from authentication.forms import SignUp
 from calculator.models import UserStat, Diet, MacroDistribution
 
 
@@ -178,48 +177,3 @@ def edit_profile(request, pk):
     imperial_form = ImperialForm(request.POST or None, instance=current_record)
 
     return render(request, "calculator/edit_profile.html", {"metric_form": metric_form, "imperial_form": imperial_form})
-
-
-def user_login(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, "Successfully Logged In")
-            return redirect("home")
-        else:
-            messages.error(request, "Invalid username or password")
-            return redirect("home")
-    else:
-        return render(request, "calculator/login.html")
-
-
-def user_signup(request):
-    if request.method == "POST":
-        signup_form = SignUp(request.POST)
-
-        if signup_form.is_valid():
-            signup_form.save()
-
-            username = signup_form.cleaned_data["username"]
-            password = signup_form.cleaned_data["password1"]
-
-            user = authenticate(request, username=username, password=password)
-            login(request, user)
-            messages.success(request, "Successfully Signed Up")
-            return redirect("home")
-        else:
-            return render(request, "calculator/home.html")
-
-    else:
-        signup_form = SignUp()
-        return render(request, "calculator/signup.html", {"signup_form": signup_form})
-
-
-def user_logout(request):
-    logout(request)
-    messages.success(request, "Successfully logged out")
-    return redirect("home")
