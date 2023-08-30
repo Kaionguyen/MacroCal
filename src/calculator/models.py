@@ -10,7 +10,7 @@ class UserStat(models.Model):
     height_cm = models.DecimalField(max_digits=5, decimal_places=2)
     weight_lb = models.DecimalField(max_digits=5, decimal_places=2)
     height_ft = models.IntegerField()
-    height_in = models.DecimalField(max_digits=5, decimal_places=2)
+    height_in = models.IntegerField()
     activity_level = models.CharField(max_length=1, choices=[
         ('1', 'BMR'),
         ('2', 'Sedentary: little or no exercise'),

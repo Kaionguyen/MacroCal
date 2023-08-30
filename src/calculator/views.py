@@ -129,6 +129,14 @@ def calculate_macros(request, form_choice):
         return render(request, "calculator/home.html", context)
 
 
+def metric(request):
+    return calculate_macros(request, MetricForm)
+
+
+def imperial(request):
+    return calculate_macros(request, ImperialForm)
+
+
 def landing_page(request):
     metric_form = MetricForm()
     imperial_form = ImperialForm()
@@ -170,14 +178,6 @@ def edit_profile(request, pk):
     imperial_form = ImperialForm(request.POST or None, instance=current_record)
 
     return render(request, "calculator/edit_profile.html", {"metric_form": metric_form, "imperial_form": imperial_form})
-
-
-def metric(request):
-    return calculate_macros(request, MetricForm)
-
-
-def imperial(request):
-    return calculate_macros(request, ImperialForm)
 
 
 def user_login(request):
