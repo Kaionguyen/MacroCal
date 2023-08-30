@@ -8,8 +8,8 @@
 * ~~macros~~
 * ~~database~~
 * ~~User Profile~~
-* Results Page <- 👨‍💻
-* Downloadable spreadsheet / built in diet tracker
+* ~~Results Page~~
+* Downloadable spreadsheet / built in diet tracker <- 👨‍💻
 * Styling
 
 # Extended features maybe:
