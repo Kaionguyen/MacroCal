@@ -6,6 +6,14 @@ from authentication.forms import SignUp
 from calculator.models import UserStat, Diet, MacroDistribution
 
 
+def round_data(data):
+    for key, value in data.items():
+        if isinstance(value, (float)):
+            data[key] = int(round(value))
+        elif isinstance(value, dict):
+            round_data(value)
+
+
 def retrieve_macros(form_data):
     url = "https://fitness-calculator.p.rapidapi.com/macrocalculator"
     headers = {
@@ -14,6 +22,9 @@ def retrieve_macros(form_data):
     }
     response = requests.get(url, headers=headers, params=form_data)
     response_data = response.json()["data"]
+
+    round_data(response_data)
+
     return response_data
 
 
@@ -74,7 +85,7 @@ def calculate_macros(request, form_choice):
                 elif authenticated and stat_instance:
                     stat_instance = form.save()
                     diet = Diet.objects.get(stats=stat_instance)
-                    diet.calorie = round(response_data['calorie'])
+                    diet.calorie = response_data['calorie']
                     diet.save(update_fields=['calorie'])
 
                     macro_names = ['balanced', 'lowcarbs', 'lowfat', 'highprotein']
@@ -82,9 +93,9 @@ def calculate_macros(request, form_choice):
 
                     for i, macro in enumerate(macro_distribution):
                         data = response_data[macro_names[i]]
-                        macro.protein = round(data['protein'])
-                        macro.carbs = round(data['carbs'])
-                        macro.fat = round(data['fat'])
+                        macro.protein = data['protein']
+                        macro.carbs = data['carbs']
+                        macro.fat = data['fat']
                         macro.save(update_fields=['protein', 'carbs', 'fat'])
 
                     macros = {
@@ -101,7 +112,7 @@ def calculate_macros(request, form_choice):
                     stat_instance.save()
 
                     diet = Diet.objects.create(
-                        calorie=round(response_data['calorie']),
+                        calorie=response_data['calorie'],
                         stats=stat_instance,
                     )
 
