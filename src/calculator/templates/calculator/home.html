@@ -3,7 +3,7 @@
 
 {% if user.is_authenticated %}
     {% if not user.stats %}
-        <div class="col-md-6">
+        <div class="col">
             <div class="row">
                 {% include 'calculator/stat-form.html' %}
             </div>
@@ -12,12 +12,12 @@
         {% include 'calculator/profile-card.html' %}
     {% endif %}
 {% else %}
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <div class="row">
             {% include 'calculator/stat-form.html' %}
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <div class="container">
             <div class="row">
                 <div class="col text-center">

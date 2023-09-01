@@ -4,49 +4,46 @@
 {% block content %}
     <div class="container mb-5">
         <div class="row">
-            {% if user.is_authenticated %}
-                <div class="col-md-6 mt-4 mb-4">
-                    {% include 'calculator/profile-card.html' %} 
-                </div>
-            {% endif %}
+        {% if user.is_authenticated %}
+            <div class="col-lg-6 mt-4 mb-4">
+                {% include 'calculator/profile-card.html' %} 
+            </div>
+        {% else %}
+            <div class="col-lg-6 mt-4 mb-4">
+                {% include 'calculator/stat-form.html' %}
+            </div>
+            <script>
+                function setActiveTab(selectedUnit) {
+                    const metricTab = document.getElementById('nav-metric-tab');
+                    const imperialTab = document.getElementById('nav-imperial-tab');
+                    const metricContent = document.getElementById('nav-metric');
+                    const imperialContent = document.getElementById('nav-imperial');
+
+                    if (selectedUnit === 'metric') {
+                        metricTab.classList.add('active');
+                        imperialTab.classList.remove('active');
+                        metricContent.classList.add('show', 'active');
+                        imperialContent.classList.remove('show', 'active');
+                    } else {
+                        metricTab.classList.remove('active');
+                        imperialTab.classList.add('active');
+                        metricContent.classList.remove('show', 'active');
+                        imperialContent.classList.add('show', 'active');
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const formType = '{{ form_type }}';
+                    setActiveTab(formType);
+                });
+            </script>
+        {% endif %}
             <div class="col">
-                <div class="row pb-3">
-                    <div class="col text-end">
-                        <a id="collapse-all" href="javascript:void(0)">Collapse All -</a>
-                        <a id="expand-all" href="javascript:void(0)">Expand All +</a>
-                    </div>
-                    {% include 'calculator/accordian.html' %} 
+                <div class="col text-end">
+                    <a id="collapse-all" href="javascript:void(0)">Collapse All -</a>
+                    <a id="expand-all" href="javascript:void(0)">Expand All +</a>
                 </div>
-                <div class="row pt-3">
-                    {% if not user.is_authenticated %}
-                        {% include 'calculator/stat-form.html' %}
-                        <script>
-                            function setActiveTab(selectedUnit) {
-                                const metricTab = document.getElementById('nav-metric-tab');
-                                const imperialTab = document.getElementById('nav-imperial-tab');
-                                const metricContent = document.getElementById('nav-metric');
-                                const imperialContent = document.getElementById('nav-imperial');
-
-                                if (selectedUnit === 'metric') {
-                                    metricTab.classList.add('active');
-                                    imperialTab.classList.remove('active');
-                                    metricContent.classList.add('show', 'active');
-                                    imperialContent.classList.remove('show', 'active');
-                                } else {
-                                    metricTab.classList.remove('active');
-                                    imperialTab.classList.add('active');
-                                    metricContent.classList.remove('show', 'active');
-                                    imperialContent.classList.add('show', 'active');
-                                }
-                            }
-
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const formType = '{{ form_type }}';
-                                setActiveTab(formType);
-                            });
-                        </script>
-                    {% endif %}
-                </div>
+                {% include 'calculator/accordian.html' %} 
             </div>
         </div>
     </div>

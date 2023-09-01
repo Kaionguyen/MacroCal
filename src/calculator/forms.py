@@ -20,7 +20,7 @@ class MetricForm(ModelForm):
         height_cm = cleaned_data.get('height_cm')
 
         if weight_kg is not None:
-            weight_lb = round(weight_kg * Decimal('2.20462'), 2)
+            weight_lb = round(weight_kg * Decimal('2.20462'))
             cleaned_data['weight_lb'] = weight_lb
 
         if height_cm is not None:
@@ -81,5 +81,3 @@ class ImperialForm(ModelForm):
             instance.save()
 
         return instance
-
-
