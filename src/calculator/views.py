@@ -1,8 +1,6 @@
-from django.forms.widgets import static
 import requests
 import openpyxl
 from openpyxl.styles import Alignment
-from io import BytesIO
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.conf import settings
