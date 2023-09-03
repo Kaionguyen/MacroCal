@@ -1,6 +1,12 @@
+from django.forms.widgets import static
 import requests
+import openpyxl
+from openpyxl.styles import Alignment
+from io import BytesIO
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.conf import settings
+from django.forms.models import model_to_dict
 from .forms import ImperialForm, MetricForm
 from authentication.forms import SignUp
 from calculator.models import UserStat, Diet, MacroDistribution
@@ -28,6 +34,40 @@ def retrieve_macros(form_data):
     return response_data
 
 
+def create_spreadsheet(request, pk):
+    template = "calculator/templates/calculator/Template.xlsx"
+    workbook = openpyxl.load_workbook(template)
+    stat_sheet = workbook["Stats"]
+
+    user_stat = UserStat.objects.get(pk=pk)
+    stats = model_to_dict(user_stat)
+
+    stat_sheet.append(
+        [
+            user_stat.last_updated.strftime("%m/%d/%Y"),
+            stats["age"],
+            stats["sex"],
+            f'{stats["weight_kg"]} kg',
+            f'{stats["height_cm"]} cm',
+            f'{stats["weight_lb"]} lb',
+            f'{stats["height_ft"]}\'{stats["height_in"]}"',
+            int(stats["activity_level"]),
+            stats["weight_goal"],
+        ]
+    )
+
+    for row in stat_sheet.iter_rows(min_row=2, max_row=2, min_col=2, max_col=9):
+        for cell in row:
+            cell.alignment = Alignment(horizontal="left")
+
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Tracker.xlsx'
+
+    workbook.save(response)
+
+    return response
+
+
 def calculate_macros(request, form_choice):
     if request.method == "POST":
         user = request.user
@@ -40,7 +80,11 @@ def calculate_macros(request, form_choice):
             except UserStat.DoesNotExist:
                 pass
 
-        form = form_choice(request.POST, instance=stat_instance) if stat_instance and authenticated else form_choice(request.POST)
+        form = (
+            form_choice(request.POST, instance=stat_instance)
+            if stat_instance and authenticated
+            else form_choice(request.POST)
+        )
 
         if form.is_valid():
             form_data = {
@@ -55,17 +99,17 @@ def calculate_macros(request, form_choice):
             try:
                 response_data = retrieve_macros(form_data)
 
-                balanced_data = response_data['balanced']
-                lowcarb_data = response_data['lowcarbs']
-                lowfat_data = response_data['lowfat']
-                highprotein_data = response_data['highprotein']
+                balanced_data = response_data["balanced"]
+                lowcarb_data = response_data["lowcarbs"]
+                lowfat_data = response_data["lowfat"]
+                highprotein_data = response_data["highprotein"]
 
                 if not authenticated:
                     form_type = request.POST.get("form_type")
 
                     if form_type == "metric":
-                        metric_form = form
                         imperial_form = ImperialForm()
+                        metric_form = form
                     elif form_type == "imperial":
                         imperial_form = form
                         metric_form = MetricForm()
@@ -85,25 +129,35 @@ def calculate_macros(request, form_choice):
                 elif authenticated and stat_instance:
                     stat_instance = form.save()
                     diet = Diet.objects.get(stats=stat_instance)
-                    diet.calorie = response_data['calorie']
-                    diet.save(update_fields=['calorie'])
+                    diet.calorie = response_data["calorie"]
+                    diet.save(update_fields=["calorie"])
 
-                    macro_names = ['balanced', 'lowcarbs', 'lowfat', 'highprotein']
-                    macro_distribution = MacroDistribution.objects.filter(user_diet=diet)
+                    macro_names = ["balanced", "lowcarbs", "lowfat", "highprotein"]
+                    macro_distribution = MacroDistribution.objects.filter(
+                        user_diet=diet
+                    )
 
                     for i, macro in enumerate(macro_distribution):
                         data = response_data[macro_names[i]]
-                        macro.protein = data['protein']
-                        macro.carbs = data['carbs']
-                        macro.fat = data['fat']
-                        macro.save(update_fields=['protein', 'carbs', 'fat'])
+                        macro.protein = data["protein"]
+                        macro.carbs = data["carbs"]
+                        macro.fat = data["fat"]
+                        macro.save(update_fields=["protein", "carbs", "fat"])
 
                     macros = {
                         "calorie": diet.calorie,
-                        "balanced": MacroDistribution.objects.get(plan_name='Balanced', user_diet=diet),
-                        "lowcarbs": MacroDistribution.objects.get(plan_name='Low Carb', user_diet=diet),
-                        "lowfat": MacroDistribution.objects.get(plan_name='Low Fat', user_diet=diet),
-                        "highprotein": MacroDistribution.objects.get(plan_name='High Protein', user_diet=diet),
+                        "balanced": MacroDistribution.objects.get(
+                            plan_name="Balanced", user_diet=diet
+                        ),
+                        "lowcarbs": MacroDistribution.objects.get(
+                            plan_name="Low Carb", user_diet=diet
+                        ),
+                        "lowfat": MacroDistribution.objects.get(
+                            plan_name="Low Fat", user_diet=diet
+                        ),
+                        "highprotein": MacroDistribution.objects.get(
+                            plan_name="High Protein", user_diet=diet
+                        ),
                     }
 
                 else:
@@ -112,16 +166,24 @@ def calculate_macros(request, form_choice):
                     stat_instance.save()
 
                     diet = Diet.objects.create(
-                        calorie=response_data['calorie'],
+                        calorie=response_data["calorie"],
                         stats=stat_instance,
                     )
 
                     macros = {
-                        "calorie": response_data['calorie'],
-                        "balanced": MacroDistribution.objects.create(plan_name='Balanced', **balanced_data, user_diet=diet),
-                        "lowcarbs": MacroDistribution.objects.create(plan_name='Low Carb', **lowcarb_data, user_diet=diet),
-                        "lowfat": MacroDistribution.objects.create(plan_name='Low Fat', **lowfat_data, user_diet=diet),
-                        "highprotein": MacroDistribution.objects.create(plan_name='High Protein', **highprotein_data, user_diet=diet),
+                        "calorie": response_data["calorie"],
+                        "balanced": MacroDistribution.objects.create(
+                            plan_name="Balanced", **balanced_data, user_diet=diet
+                        ),
+                        "lowcarbs": MacroDistribution.objects.create(
+                            plan_name="Low Carb", **lowcarb_data, user_diet=diet
+                        ),
+                        "lowfat": MacroDistribution.objects.create(
+                            plan_name="Low Fat", **lowfat_data, user_diet=diet
+                        ),
+                        "highprotein": MacroDistribution.objects.create(
+                            plan_name="High Protein", **highprotein_data, user_diet=diet
+                        ),
                     }
 
                 return render(request, "calculator/profile.html", {"macros": macros})
@@ -187,4 +249,8 @@ def edit_profile(request, pk):
     metric_form = MetricForm(request.POST or None, instance=current_record)
     imperial_form = ImperialForm(request.POST or None, instance=current_record)
 
-    return render(request, "calculator/edit_profile.html", {"metric_form": metric_form, "imperial_form": imperial_form})
+    return render(
+        request,
+        "calculator/edit_profile.html",
+        {"metric_form": metric_form, "imperial_form": imperial_form},
+    )

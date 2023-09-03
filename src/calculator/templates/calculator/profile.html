@@ -44,6 +44,9 @@
                     <a id="expand-all" href="javascript:void(0)">Expand All +</a>
                 </div>
                 {% include 'calculator/accordian.html' %} 
+                <div class="col text-end">
+                    <a href="{% url 'create_spreadsheet' pk=user.stats.id%}">Download Spreadsheet</a>
+                </div>
             </div>
         </div>
     </div>
