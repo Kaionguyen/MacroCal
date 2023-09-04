@@ -35,12 +35,12 @@ def retrieve_macros(form_data):
 def create_spreadsheet(request, pk):
     template = "calculator/templates/calculator/Template.xlsx"
     workbook = openpyxl.load_workbook(template)
-    stat_sheet = workbook["Stats"]
+    sheet = workbook["Stats"]
 
     user_stat = UserStat.objects.get(pk=pk)
     stats = model_to_dict(user_stat)
 
-    stat_sheet.append(
+    sheet.append(
         [
             user_stat.last_updated.strftime("%m/%d/%Y"),
             stats["age"],
@@ -54,9 +54,17 @@ def create_spreadsheet(request, pk):
         ]
     )
 
-    for row in stat_sheet.iter_rows(min_row=2, max_row=2, min_col=2, max_col=9):
+    for row in sheet.iter_rows(min_row=2, max_row=2, min_col=2, max_col=9):
         for cell in row:
             cell.alignment = Alignment(horizontal="left")
+
+    for plan in user_stat.diet.macro_distribution.all():
+        sheet = workbook[plan.plan_name]
+
+        sheet.cell(row=3, column=1, value=plan.user_diet.calorie)
+        sheet.cell(row=3, column=2, value=plan.protein)
+        sheet.cell(row=3, column=3, value=plan.carbs)
+        sheet.cell(row=3, column=4, value=plan.fat)
 
     response = HttpResponse(content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename=Tracker.xlsx'
