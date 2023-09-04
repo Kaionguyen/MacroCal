@@ -7,7 +7,7 @@ Theres still several features to be implemented:
 * Diet Tracker
 
 ## Current Features
-* Get estimated daily calorie intake and different macro distributions fit to your needs using the [macrocalculator endpoint](https://rapidapi.com/malaaddincelik/api/fitness-calculator/)
+* Get estimated daily calorie intake and different macro distributions fit to your needs using the [macrocalculator amounts](https://rapidapi.com/malaaddincelik/api/fitness-calculator/)
   * Available for ***registered*** and ***unregistered users***
 * Download a preformatted xlsx spreadsheet to track meals outside of web app
   * ***Only*** available to ***registered*** users
