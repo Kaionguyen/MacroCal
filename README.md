@@ -9,6 +9,7 @@ Theres still several features to be implemented:
 ## Current Features
 * Get estimated daily calorie intake and different macro distributions fit to your needs using the [macrocalculator amounts](https://rapidapi.com/malaaddincelik/api/fitness-calculator/)
   * Available for ***registered*** and ***unregistered users***
+https://github.com/Kaionguyen/MacroCal/assets/107159508/7b9a8727-db6f-48cb-8e4b-9e33b6a89467
 <br>https://github.com/Kaionguyen/MacroCal/assets/107159508/4024eac3-ca73-41ae-bd5f-3b6064f2bd56
 * Download a preformatted xlsx spreadsheet to track meals outside of web app
   * ***Only*** available to ***registered*** users
