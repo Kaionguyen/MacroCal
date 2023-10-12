@@ -1,11 +1,3 @@
-## WIP
-Theres still several features to be implemented:
-* Edamam api endpoints
-  * food lookup
-  * nutrition analysis
-  * recipe search
-* Diet Tracker
-
 ## Current Features
 * Get estimated daily calorie intake and different macro distributions fit to your needs using the [macrocalculator amounts](https://rapidapi.com/malaaddincelik/api/fitness-calculator/)
   * Available for ***registered*** and ***unregistered users***
